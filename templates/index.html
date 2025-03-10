@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard XOR</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    /* Reset e Tipografia */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+nav .logo {
+    display: flex;
+    flex-direction: column;
+}
+
+nav .logo-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+nav .logo-subtext {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+nav .about-us {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+nav .about-us:hover {
+    background-color: #1abc9c;
+}
+
+/* Container Principal */
+.container {
+    display: flex;
+    padding: 2rem;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.stock-select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #f8f9fa;
+}
+
+.sidebar-info {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.sidebar-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.sidebar-info p {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+}
+
+#price-change.positive {
+    color: #27ae60;
+}
+
+#price-change.negative {
+    color: #e74c3c;
+}
+
+/* Conteúdo Principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.chart-container {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    height: 400px;
+}
+
+.prediction-section {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.prediction-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.prediction-section p {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+.news-section {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.news-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.news-card {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.news-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #2c3e50;
+}
+
+.news-card p {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+}
+
+.news-link {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.news-link:hover {
+    color: #1abc9c;
+}
+</style>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <span class="logo-text">XOR</span>
+            <span class="logo-subtext">Financial Insights</span>
+        </div>
+        <button class="about-us">About Us</button>
+    </nav>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2 class="sidebar-title">Selecione a Empresa</h2>
+            <select id="stock-select" class="stock-select">
+                <option value="PETR4">PETR4 - Petrobras</option>
+                <option value="VALE3">VALE3 - Vale S.A.</option>
+                <option value="ITUB4">ITUB4 - Itaú Unibanco</option>
+                <option value="BBDC4">BBDC4 - Banco Bradesco</option>
+            </select>
+            <div class="sidebar-info">
+                <h3>Informações Rápidas</h3>
+                <p>Preço Atual: <span id="current-price">R$ 32,50</span></p>
+                <p>Variação: <span id="price-change" class="positive">+1,5%</span></p>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content">
+            <!-- Gráfico -->
+            <div class="chart-container">
+                <canvas id="stockChart"></canvas>
+            </div>
+
+            <!-- Previsão -->
+            <div class="prediction-section">
+                <h2>Previsão de Ações</h2>
+                <p>Com base em análises de mercado e dados históricos, a previsão para <strong>PETR4</strong> indica uma tendência de alta nos próximos dias. Recomendamos monitorar os níveis de suporte e resistência para tomar decisões estratégicas.</p>
+            </div>
+
+            <!-- Notícias -->
+            <div class="news-section">
+                <h2>Últimas Notícias</h2>
+                <div class="news-grid">
+                    <div class="news-card">
+                        <h3>Petrobras anuncia novos investimentos</h3>
+                        <p>A Petrobras planeja investir R$ 10 bilhões em energia renovável até 2025, impulsionando o interesse dos investidores.</p>
+                        <a href="#" class="news-link">Leia mais →</a>
+                    </div>
+                    <div class="news-card">
+                        <h3>Mercado de ações em alta</h3>
+                        <p>O Ibovespa registrou alta de 2,3% nesta semana, impulsionado pelo setor de commodities.</p>
+                        <a href="#" class="news-link">Leia mais →</a>
+                    </div>
+                    <div class="news-card">
+                        <h3>Vale S.A. expande operações</h3>
+                        <p>A Vale S.A. anunciou a expansão de suas operações na Ásia, aumentando a demanda por minério de ferro.</p>
+                        <a href="#" class="news-link">Leia mais →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script do Gráfico -->
+    <script>
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Preço das Ações (PETR4)',
+                    data: [30, 31, 32, 31.5, 32.5, 33, 34],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#4BC0C0'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
